@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import { act } from 'react-dom/test-utils';
 
 export function ClockToggle ({toggleClock}) {
   return (
@@ -17,7 +18,9 @@ const Clock = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime(new Date())
+      act(() => {
+        setTime(new Date())
+      })
     }, 1000);
 
     return () => {
@@ -26,17 +29,14 @@ const Clock = () => {
     }
   })
 
+  let hours = time.getHours();
+  let minutes = time.getMinutes();
+  let seconds = time.getSeconds();
+  hours = (hours < 10) ? `0${hours}` : hours;
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  seconds = (seconds < 10) ? `0${seconds}` : seconds;
 
-
-
-    let hours = time.getHours();
-    let minutes = time.getMinutes();
-    let seconds = time.getSeconds();
-    hours = (hours < 10) ? `0${hours}` : hours;
-    minutes = (minutes < 10) ? `0${minutes}` : minutes;
-    seconds = (seconds < 10) ? `0${seconds}` : seconds;
-
-    const timezone = time
+  const timezone = time
       .toTimeString() // Form: "14:39:07 GMT-0600 (PDT)"
       .replace(/[^A-Z]/g, "") // Strip out all but capitals
       .slice(3); // Eliminate initial GMT
